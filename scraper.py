@@ -29,7 +29,10 @@ for a in soup.select("div.main-post-body a"):
         if href not in existing_links:
             new_dramas.append({"title": title, "link": href})
 
-print(f"Found {len(new_dramas)} new dramas.")
+# Only take the first 30 new dramas
+new_dramas = new_dramas[:30]
+
+print(f"Found {len(new_dramas)} new dramas (limited to 30).")
 
 # Fetch posters for new dramas
 for i, drama in enumerate(new_dramas):
@@ -53,6 +56,7 @@ for i, drama in enumerate(new_dramas):
     except Exception as e:
         print(f"⚠ Error with {drama['title']}: {e}")
 
+# Save updated JSON
 with open("dramas.json", "w", encoding="utf-8") as f:
     json.dump(existing_dramas, f, ensure_ascii=False, indent=2)
 
