@@ -3,95 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Happy Birthday Mom! 🎂</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff7f7;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-    }
-    header {
-      background: #ffb6c1;
-      padding: 2rem;
-      color: white;
-      font-size: 2rem;
-      font-weight: bold;
-      position: relative;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      padding: 2rem;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 1rem;
-      transition: transform 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.05);
-    }
-    .card img {
-      max-width: 100%;
-      border-radius: 10px;
-    }
-    .card h3 {
-      margin: 0.5rem 0;
-    }
-    .confetti {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: gold;
-      animation: fall 3s linear infinite;
-    }
-    @keyframes fall {
-      0% { transform: translateY(-100vh) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    🎉 Happy Birthday Mom! 🎉  
+    🎉 Happy Birthday Mom! 🎉
     <p>Here are some dramas I think you’ll love 💖</p>
   </header>
 
-  <section class="gallery">
-    <div class="card">
-      <img src="https://via.placeholder.com/250x350" alt="Drama Poster">
-      <h3>Drama Title 1</h3>
-      <p>Short description of the drama goes here.</p>
-      <a href="https://example.com" target="_blank">Watch Now</a>
-    </div>
-    <div class="card">
-      <img src="https://via.placeholder.com/250x350" alt="Drama Poster">
-      <h3>Drama Title 2</h3>
-      <p>Short description of the drama goes here.</p>
-      <a href="https://example.com" target="_blank">Watch Now</a>
-    </div>
-    <div class="card">
-      <img src="https://via.placeholder.com/250x350" alt="Drama Poster">
-      <h3>Drama Title 3</h3>
-      <p>Short description of the drama goes here.</p>
-      <a href="https://example.com" target="_blank">Watch Now</a>
-    </div>
-  </section>
+  <section class="gallery"></section>
 
   <script>
-    // 🎉 Confetti generator
-    for (let i = 0; i < 40; i++) {
-      let confetti = document.createElement("div");
-      confetti.className = "confetti";
-      confetti.style.left = Math.random() * 100 + "vw";
-      confetti.style.background = ["#ff69b4", "#ffd700", "#87ceeb"][Math.floor(Math.random()*3)];
-      confetti.style.animationDuration = (2 + Math.random() * 3) + "s";
-      document.querySelector("header").appendChild(confetti);
-    }
+  fetch("dramas.json")
+    .then(r => r.json())
+    .then(dramas => {
+      const gallery = document.querySelector(".gallery");
+      dramas.slice(0, 12).forEach(d => {  // limit for neatness
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${d.poster}" alt="${d.title}">
+          <h3>${d.title}</h3>
+          <p>${d.summary || "No summary available."}</p>
+          <a href="${d.link}" target="_blank">View Details</a>
+        `;
+        gallery.appendChild(card);
+      });
+    });
   </script>
 </body>
 </html>

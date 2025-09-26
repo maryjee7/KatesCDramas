@@ -1,0 +1,31 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #fff7f7;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  header {
+    background: #ffb6c1;
+    padding: 2rem;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  .card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 1rem;
+  }
+  .card img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
