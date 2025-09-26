@@ -7,10 +7,12 @@ from urllib.parse import quote
 
 BASE_URL = "https://www.chinesedrama.info"
 LIST_URL = f"{BASE_URL}/p/drama-list.html"
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+JSON_PATH = os.path.join(PROJECT_DIR, "dramas.json")
 
 # Load existing dramas.json if it exists
-if os.path.exists("dramas.json"):
-    with open("dramas.json", "r", encoding="utf-8") as f:
+if os.path.exists(JSON_PATH):
+    with open(JSON_PATH, "r", encoding="utf-8") as f:
         existing_dramas = json.load(f)
 else:
     existing_dramas = []
@@ -57,7 +59,7 @@ for i, drama in enumerate(new_dramas):
         print(f"⚠ Error with {drama['title']}: {e}")
 
 # Save updated JSON
-with open("dramas.json", "w", encoding="utf-8") as f:
+with open(JSON_PATH, "w", encoding="utf-8") as f:
     json.dump(existing_dramas, f, ensure_ascii=False, indent=2)
 
 print(f"🎬 Updated dramas.json with {len(new_dramas)} new dramas.")
