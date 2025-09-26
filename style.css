@@ -42,9 +42,10 @@ header {
 .card p {
   font-size: 0.95rem;
   color: #555;
-  height: 60px;
-  overflow: hidden;
+  height: auto;       /* allow full text */
+  overflow: visible;
 }
+
 .card a {
   display: inline-block;
   margin-top: 0.5rem;
