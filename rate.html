@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Dramas ⭐</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    Rate Your Favorite Dramas!
+    <p>Click the stars to rate each drama.</p>
+    <a href="index.html" class="rate-button">Back to Gallery</a>
+  </header>
+
+  <section class="gallery"></section>
+
+  <script>
+    fetch("dramas.json")
+      .then(res => res.json())
+      .then(dramas => {
+        const gallery = document.querySelector(".gallery");
+        dramas.forEach(d => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
+            <h3>${d.title}</h3>
+            <div class="stars">
+              <span data-value="1">⭐</span>
+              <span data-value="2">⭐</span>
+              <span data-value="3">⭐</span>
+              <span data-value="4">⭐</span>
+              <span data-value="5">⭐</span>
+            </div>
+          `;
+          gallery.appendChild(card);
+
+          const stars = card.querySelectorAll(".stars span");
+          stars.forEach(star => {
+            star.addEventListener("click", () => {
+              const rating = star.dataset.value;
+              alert(`You rated "${d.title}" ${rating} stars!`);
+              sendToSheet(d.title, rating);
+            });
+          });
+        });
+      });
+
+    function sendToSheet(title, rating) {
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbxRIXexsyc4wONMYdgIf5D5iiHmZdIbtmQKytxS4Nn_k4yib9QDak690Q4Yjf84cIba/exec";
+      const params = new URLSearchParams({ title, rating });
+      fetch(`${scriptUrl}?${params.toString()}`)
+        .then(response => response.text())
+        .then(data => console.log("Rating sent:", data))
+        .catch(error => console.error("Error sending rating:", error));
+    }
+  </script>
+</body>
+</html>

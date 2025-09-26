@@ -62,3 +62,18 @@ header {
 .card a:hover {
   background: #ff1493;
 }
+.rate-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1rem;
+  background: #ff69b4;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.rate-button:hover {
+  background: #ff1493;
+}
