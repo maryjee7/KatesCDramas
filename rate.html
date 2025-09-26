@@ -1,61 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rate Dramas ⭐</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rate Dramas ⭐</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { font-family: Arial, sans-serif; padding: 1rem; background: #fdf6f0; }
+header { text-align: center; margin-bottom: 1rem; }
+.rate-button { margin-top: 1rem; padding: 0.6rem 1rem; background: #ff69b4; color: white; border-radius: 8px; text-decoration: none; font-weight: bold; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.card { padding: 0.5rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+.card img { width: 100%; height: auto; border-radius: 5px; }
+.stars span { cursor: pointer; font-size: 1.5rem; margin: 0 2px; transition: transform 0.1s; }
+.stars span:hover { transform: scale(1.2); }
+textarea { width: 100%; margin-top: 0.5rem; padding: 0.3rem; border-radius: 5px; border: 1px solid #ccc; }
+.save-btn { margin-top: 0.5rem; padding: 0.4rem 0.8rem; background: #ff69b4; color: white; border: none; border-radius: 5px; cursor: pointer; }
+.save-btn:hover { background: #ff1493; }
+#password-container { text-align: center; margin-bottom: 1rem; }
+</style>
 </head>
 <body>
-  <header>
-    Rate Your Favorite Dramas!
-    <p>Click the stars to rate each drama.</p>
-    <a href="index.html" class="rate-button">Back to Gallery</a>
-  </header>
 
-  <section class="gallery"></section>
+<header>
+  <h1>Rate Your Favorite Dramas!</h1>
+  <p>Click stars and leave a comment for each drama.</p>
+  <a href="index.html" class="rate-button">Back to Gallery</a>
+</header>
 
-  <script>
-    fetch("dramas.json")
-      .then(res => res.json())
-      .then(dramas => {
-        const gallery = document.querySelector(".gallery");
-        dramas.forEach(d => {
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-            ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
-            <h3>${d.title}</h3>
-            <div class="stars">
-              <span data-value="1">⭐</span>
-              <span data-value="2">⭐</span>
-              <span data-value="3">⭐</span>
-              <span data-value="4">⭐</span>
-              <span data-value="5">⭐</span>
-            </div>
-          `;
-          gallery.appendChild(card);
+<div id="password-container">
+  <input type="password" id="password" placeholder="Enter password">
+  <button id="unlock">Unlock</button>
+  <p id="password-msg" style="color:red;"></p>
+</div>
 
-          const stars = card.querySelectorAll(".stars span");
-          stars.forEach(star => {
-            star.addEventListener("click", () => {
-              const rating = star.dataset.value;
-              alert(`You rated "${d.title}" ${rating} stars!`);
-              sendToSheet(d.title, rating);
-            });
+<section class="gallery" style="display:none;"></section>
+
+<script>
+const PASSWORD = "211076"; // change to your chosen password
+const scriptUrl = "https://script.google.com/macros/s/AKfycbz14o0kWbKUtUpU6firhWxzqAuzOv3EWV8cYDaCujgE-XK2vwe2FGvIEtl86CJuNQu3/exec"; // replace with your Apps Script URL
+
+const unlockButton = document.getElementById("unlock");
+const passwordInput = document.getElementById("password");
+const passwordMsg = document.getElementById("password-msg");
+const gallery = document.querySelector(".gallery");
+const passwordContainer = document.getElementById("password-container");
+
+unlockButton.addEventListener("click", () => {
+  if(passwordInput.value === PASSWORD) {
+    passwordContainer.style.display = "none";
+    gallery.style.display = "grid";
+    loadReviews();
+  } else {
+    passwordMsg.textContent = "Incorrect password!";
+  }
+});
+
+function loadReviews() {
+  fetch("dramas.json")
+    .then(res => res.json())
+    .then(dramas => {
+      const savedReviews = JSON.parse(localStorage.getItem("reviews") || "{}");
+
+      dramas.forEach(d => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const review = savedReviews[d.title] || {stars: 0, comment: ""};
+
+        card.innerHTML = `
+          ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
+          <h3>${d.title}</h3>
+          <div class="stars">
+            ${[1,2,3,4,5].map(i => `<span data-value="${i}" style="color:${i<=review.stars?'gold':'gray'}">⭐</span>`).join('')}
+          </div>
+          <textarea placeholder="Leave a comment">${review.comment}</textarea>
+          <button class="save-btn">Save Review</button>
+        `;
+
+        gallery.appendChild(card);
+
+        const stars = card.querySelectorAll(".stars span");
+        const textarea = card.querySelector("textarea");
+        const saveBtn = card.querySelector(".save-btn");
+
+        stars.forEach(star => {
+          star.addEventListener("click", () => {
+            const rating = star.dataset.value;
+            stars.forEach(s => s.style.color = s.dataset.value <= rating ? "gold" : "gray");
+            review.stars = parseInt(rating);
           });
         });
+
+        saveBtn.addEventListener("click", () => {
+          review.comment = textarea.value;
+          savedReviews[d.title] = review;
+          localStorage.setItem("reviews", JSON.stringify(savedReviews));
+          sendToSheet(d.title, review.stars, review.comment);
+          alert(`Saved review for "${d.title}"!`);
+        });
       });
+    });
+}
 
-      function sendToSheet(title, rating) {
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbyRW9mZKz9hcl7I4ACWyCgnXYhJD349Z_DQK4sbh4EO5naTmF9GomUXdZd8h1pcKAqd/exec";
-        const params = new URLSearchParams({ title, rating });
-        fetch(`${scriptUrl}?${params.toString()}`)
-          .then(response => response.text())
-          .then(data => console.log("Rating sent:", data))
-          .catch(error => console.error("Error sending rating:", error));
-      }
+function sendToSheet(title, stars, comment) {
+  const params = new URLSearchParams({ title, stars, comment });
+  fetch(`${scriptUrl}?${params.toString()}`)
+    .then(res => res.text())
+    .then(data => console.log("Saved to Google Sheets:", data))
+    .catch(err => console.error("Error saving to Sheets:", err));
+}
+</script>
 
-  </script>
 </body>
 </html>
