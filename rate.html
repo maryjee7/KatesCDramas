@@ -47,14 +47,15 @@
         });
       });
 
-    function sendToSheet(title, rating) {
-      const scriptUrl = "https://script.google.com/macros/s/AKfycbxRIXexsyc4wONMYdgIf5D5iiHmZdIbtmQKytxS4Nn_k4yib9QDak690Q4Yjf84cIba/exec";
-      const params = new URLSearchParams({ title, rating });
-      fetch(`${scriptUrl}?${params.toString()}`)
-        .then(response => response.text())
-        .then(data => console.log("Rating sent:", data))
-        .catch(error => console.error("Error sending rating:", error));
-    }
+      function sendToSheet(title, rating) {
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbyRW9mZKz9hcl7I4ACWyCgnXYhJD349Z_DQK4sbh4EO5naTmF9GomUXdZd8h1pcKAqd/exec";
+        const params = new URLSearchParams({ title, rating });
+        fetch(`${scriptUrl}?${params.toString()}`)
+          .then(response => response.text())
+          .then(data => console.log("Rating sent:", data))
+          .catch(error => console.error("Error sending rating:", error));
+      }
+
   </script>
 </body>
 </html>
