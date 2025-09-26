@@ -34,8 +34,8 @@
   </head>
   <body>
     <header>
-      🎉 Happy Birthday Mom! 🎉
-      <p>Here are some Chinese dramas I think you'll love 💖</p>
+      🎉 Kate's Chinese Drama List 🎉
+      <p> Rate, review and save 💖</p>
     </header>
   
     <section class="gallery"></section>
@@ -51,7 +51,7 @@
             card.innerHTML = `
               ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
               <h3>${d.title}</h3>
-              <p>${d.summary || "No summary available."}</p>
+              // <p>${d.summary || "No summary available."}</p>
               <a href="${d.link}" target="_blank">View Details</a>
             `;
             gallery.appendChild(card);
