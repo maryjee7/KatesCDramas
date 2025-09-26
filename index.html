@@ -1,55 +1,4 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Happy Birthday Mom! 🎂</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    🎉 Happy Birthday Mom! 🎉
-    <p>Here are some dramas I think you’ll love 💖</p>
-  </header>
-
-  <section class="gallery"></section>
-
-  <script>
-  fetch("dramas.json")
-    .then(r => r.json())
-    .then(dramas => {
-      const gallery = document.querySelector(".gallery");
-      dramas.slice(0, 12).forEach(d => {  // limit for neatness
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${d.poster}" alt="${d.title}">
-          <h3>${d.title}</h3>
-          <p>${d.summary || "No summary available."}</p>
-          <a href="${d.link}" target="_blank">View Details</a>
-        `;
-        gallery.appendChild(card);
-      });
-    });
-  </script>
-</body>
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday Mom! 🎂</title>
-  <link rel="stylesheet" href="style.css">
- 
-</head>
-<body>
-  <header>
-    🎉 Happy Birthday Mom! 🎉
-    <p>Here are some Chinese dramas I think you'll love 💖</p>
-  </header>
-
-  <section class="gallery"></section>
-
+<!-- 
   <script>
     const dramas = [
       {
@@ -73,7 +22,43 @@
       `;
       gallery.appendChild(card);
     });
-  </script>
+  </script> -->
   
-</body>
-</html>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Mom! 🎂</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <header>
+      🎉 Happy Birthday Mom! 🎉
+      <p>Here are some Chinese dramas I think you'll love 💖</p>
+    </header>
+  
+    <section class="gallery"></section>
+  
+    <script>
+      fetch("dramas.json")
+        .then(response => response.json())
+        .then(dramas => {
+          const gallery = document.querySelector(".gallery");
+          dramas.forEach(d => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
+              <h3>${d.title}</h3>
+              <p>${d.summary || "No summary available."}</p>
+              <a href="${d.link}" target="_blank">View Details</a>
+            `;
+            gallery.appendChild(card);
+          });
+        })
+        .catch(err => console.error("Failed to load dramas.json:", err));
+    </script>
+  </body>
+  </html>
+  

@@ -73,9 +73,10 @@
 # print(f"🎬 Saved {len(detailed_dramas)} dramas to dramas.json")
 import os
 import json
+import time
 import requests
 from bs4 import BeautifulSoup
-import time
+from urllib.parse import quote
 
 # URLs
 BASE_URL = "https://www.chinesedrama.info"
@@ -115,12 +116,15 @@ for i, drama in enumerate(new_dramas):
         summary = None
 
         if content_div:
+            # Poster inside div#dw_data
             dw_data_div = content_div.select_one("div#dw_data")
             if dw_data_div:
                 img_tag = dw_data_div.find("img")
                 if img_tag and img_tag.get("src"):
-                    poster = img_tag["src"].replace(" ", "%20")  # encode spaces
+                    # encode URL properly
+                    poster = quote(img_tag["src"], safe=":/?=&")
 
+            # Summary: first non-empty paragraph in main post body
             for p_tag in content_div.find_all("p"):
                 text = p_tag.get_text(strip=True)
                 if text:
