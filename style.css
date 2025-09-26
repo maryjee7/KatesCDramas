@@ -77,3 +77,13 @@ header {
 .rate-button:hover {
   background: #ff1493;
 }
+.stars span {
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin: 0 2px;
+  transition: transform 0.1s;
+}
+
+.stars span:hover {
+  transform: scale(1.2);
+}
