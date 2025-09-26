@@ -1,4 +1,3 @@
-
 import os
 import json
 import time
@@ -6,7 +5,6 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 
-# URLs
 BASE_URL = "https://www.chinesedrama.info"
 LIST_URL = f"{BASE_URL}/p/drama-list.html"
 
@@ -19,7 +17,6 @@ else:
 
 existing_links = {d['link'] for d in existing_dramas}
 
-# Fetch drama list page
 response = requests.get(LIST_URL)
 soup = BeautifulSoup(response.text, "html.parser")
 
@@ -34,25 +31,20 @@ for a in soup.select("div.main-post-body a"):
 
 print(f"Found {len(new_dramas)} new dramas.")
 
-# Fetch details for new dramas
+# Fetch posters for new dramas
 for i, drama in enumerate(new_dramas):
     try:
         r = requests.get(drama["link"])
         page = BeautifulSoup(r.text, "html.parser")
         content_div = page.select_one("div.main-post-body")
         poster = None
-       
 
         if content_div:
-            # Poster inside div#dw_data
             dw_data_div = content_div.select_one("div#dw_data")
             if dw_data_div:
                 img_tag = dw_data_div.find("img")
                 if img_tag and img_tag.get("src"):
-                    # encode URL properly
                     poster = quote(img_tag["src"], safe=":/?=&")
-
-           
 
         drama.update({"poster": poster})
         existing_dramas.append(drama)
@@ -61,7 +53,6 @@ for i, drama in enumerate(new_dramas):
     except Exception as e:
         print(f"⚠ Error with {drama['title']}: {e}")
 
-# Save updated dramas.json
 with open("dramas.json", "w", encoding="utf-8") as f:
     json.dump(existing_dramas, f, ensure_ascii=False, indent=2)
 

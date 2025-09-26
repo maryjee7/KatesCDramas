@@ -1,64 +1,36 @@
-<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Mom! 🎂</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    🎉 Happy Birthday Mom! 🎉
+    <p>Here are some Chinese dramas I think you'll love 💖</p>
+  </header>
+
+  <section class="gallery"></section>
+
   <script>
-    const dramas = [
-      {
-        "title": "\"Your Highness\" Class Monitor",
-        "link": "http://www.chinesedrama.info/2019/05/drama-your-highness-class-monitor.html",
-        "poster": "https://blogger.googleusercontent.com/img/b/.../Your%20Highness%20Class%20Monitor%20China%20Web%20Drama.jpg",
-        "summary": "It follows Gu Zichen, the rebellious son of a wealthy family..."
-      }
-      // add more dramas here
-    ];
-  
-    const gallery = document.querySelector(".gallery");
-    dramas.forEach(d => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
-        <h3>${d.title}</h3>
-        <p>${d.summary || "No summary available."}</p>
-        <a href="${d.link}" target="_blank">View Details</a>
-      `;
-      gallery.appendChild(card);
-    });
-  </script> -->
-  
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday Mom! 🎂</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <header>
-      🎉 Kate's Chinese Drama List 🎉
-      <p> Rate, review and save 💖</p>
-    </header>
-  
-    <section class="gallery"></section>
-  
-    <script>
-      fetch("dramas.json")
-        .then(response => response.json())
-        .then(dramas => {
-          const gallery = document.querySelector(".gallery");
-          dramas.forEach(d => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-              ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
-              <h3>${d.title}</h3>
-              // <p>${d.summary || "No summary available."}</p>
-              <a href="${d.link}" target="_blank">View Details</a>
-            `;
-            gallery.appendChild(card);
-          });
-        })
-        .catch(err => console.error("Failed to load dramas.json:", err));
-    </script>
-  </body>
-  </html>
-  
+    fetch("dramas.json")
+      .then(response => response.json())
+      .then(dramas => {
+        const gallery = document.querySelector(".gallery");
+        dramas.forEach(d => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            ${d.poster ? `<img src="${d.poster}" alt="${d.title}">` : ""}
+            <h3>${d.title}</h3>
+            <a href="${d.link}" target="_blank">View Details</a>
+          `;
+          gallery.appendChild(card);
+        });
+      })
+      .catch(err => console.error("Failed to load dramas.json:", err));
+  </script>
+</body>
+</html>
